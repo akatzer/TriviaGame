@@ -1,5 +1,7 @@
+//hides the scoreboard before the games starts
 $(".trivia-score").hide();
 
+// Creating the questions
 var state = {
     questions: [
         {
@@ -28,12 +30,12 @@ var state = {
             correctAnswer: "True"
         },
         {
-            question: "Jack Daniel's is not aged for a specific amount of time, instead it is deemed ready for bottling when it tastes ready.",
+            question: "Jack Daniel's is not aged for a specific amount of time. Instead it is deemed ready for bottling when it tastes ready.",
             choices: ["True", "False"],
             correctAnswer: "True"
         },
         {
-            question: "After Jack Daniel's is done with their whiskey barrels, they sell them to:",
+            question: "After Jack Daniel's is done with their whiskey barrels they sell them to:",
             choices: ["Hot Sauce Makers", "Beer Brewers", "Scotch Whisky Distillers", "All of the above"],
             correctAnswer: "All of the above"
         },
@@ -43,7 +45,7 @@ var state = {
             correctAnswer: "Frank Sinatra"
         },
         {
-            question: "What kind of wood is used to make the charcoal Jack Daniel's uses in their filtering process",
+            question: "What kind of wood is used to make the charcoal Jack Daniel's uses in their filtering process?",
             choices: ["Oak", "Hickory", "Sugar Maple", "Apple"],
             correctAnswer: "Sugar Maple"
         },
@@ -54,12 +56,14 @@ var state = {
         }
 
     ],
+    //set up the variables tied to the questions
     questionCounter: 0,
     correct: 0,
     incorrect: 0,
     notAnswered: 0,
 }
 
+//Generate the questions
 function generateQuestion() {
     if (state.questionCounter < state.questions.length) {
         $(".trivia-block").append("<div class='question'>" + state.questions[state.questionCounter].question + "</div><hr>");
@@ -77,15 +81,15 @@ function generateQuestion() {
     }
 }
 
+//Generate the answers
 function generateChoices() {
     var currentChoices = state.questions[state.questionCounter].choices;
     for (var i = 0; i < currentChoices.length; i++) {
         $(".trivia-block").append(`<button type="button" class="btn btn-primary btn-lg btn-block choices" value="${currentChoices[i]}">${currentChoices[i]}</button>`);
-        
     }
-
 }
 
+//resets the game
 function resetGame() {
     state.notAnswered = 0;
     state.incorrect = 0;
@@ -95,15 +99,14 @@ function resetGame() {
     $(".timer").show();
 }
 
+//declares our time length and intervalID variable
 var number = 10;
 var intervalId;
 
 // on-click to Start the timer
-$("#start-button").on("click", function(){
+$("#start-button").on("click", function () {
     resetGame();
     run();
-    
-    
 })
 
 // start the time and show the trivia
@@ -114,16 +117,13 @@ function run() {
     intervalId = setInterval(decrement, 1000);
     generateQuestion();
     $(".timer").html("<p>Time Remaining: 10</p>");
-    
-    
 }
 
-// runs the decrement function that actually counts down
+// runs the decrement function that actually counts down. This also deals with what happens when the clock runs out.
 function decrement() {
     number--;
     $(".timer").html("<p>Time Remaining: " + number + "</p>");
-   
-  
+
     if (number == 0) {
         stop();
         $(".trivia-block").html("")
@@ -131,30 +131,30 @@ function decrement() {
         state.notAnswered++;
         state.incorrect++;
         state.questionCounter++;
-        run();
-        
-    
+        $(".trivia-block").append("Ran out of time!")
+        setTimeout(function () {
+            $(".trivia-block").html("")
+            run();
+        }, 3000);
     }
 }
 
-
-// stops the time after it reaches zero. resets the interval, timer and button text
-function stop() {    
+// Stop function that clears the interval, resets the timer and clears the timer div
+function stop() {
     clearInterval(intervalId);
     number = 10;
     $(".timer").html("");
-    
 }
 
+//on click function for the answer choices. checks the clicked value vs. the correct answer value to determine if they match
 $(document).on("click", ".choices", function () {
-
     $(".trivia-block").html("")
     var answer = $(this).val()
     if (answer === state.questions[state.questionCounter].correctAnswer) {
         state.correct++;
         state.questionCounter++
         $(".trivia-block").append("You are correct!")
-        setTimeout(function(){
+        setTimeout(function () {
             $(".trivia-block").html("")
             run();
         }, 3000);
@@ -164,15 +164,12 @@ $(document).on("click", ".choices", function () {
         state.incorrect++;
         state.questionCounter++
         $(".trivia-block").append("That was incorrect.")
-        setTimeout(function(){
+        setTimeout(function () {
             $(".trivia-block").html("")
             run();
         }, 3000);
         stop();
     }
-    
-
-    
 })
 
 

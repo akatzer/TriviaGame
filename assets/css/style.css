@@ -9,7 +9,6 @@ h1.display-4 {
     font-size: 90px;
 }
 
-
 a.btn {
     color: white;
     background-color: black;
@@ -34,11 +33,15 @@ body {
     text-align: center;
 }
 
-
-
 .btn.btn-primary.btn-lg.btn-block.choices {
     color: white;
     background-color: black;
+    border-color: black;
+}
+
+a.btn:hover{
+    color: black;
+    background-color: white;
 }
 
 .trivia-block {
